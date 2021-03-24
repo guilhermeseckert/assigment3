@@ -1,4 +1,4 @@
-let { cart } = require('../../cart');
+let cart = require('../../cart');
 
 module.exports = {
 
