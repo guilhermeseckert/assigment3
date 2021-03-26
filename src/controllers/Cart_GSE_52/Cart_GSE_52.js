@@ -1,9 +1,9 @@
-let cart = require('../../cart');
+const database = require('../../fakeDatabase');
 
 module.exports = {
 
   async show(request, response) {
-    return response.json(cart);
+    return response.json(database.cart);
   },
 
   async store(request, response) {
@@ -11,7 +11,7 @@ module.exports = {
       name, price, sku,
     } = request.body;
 
-    const addedItemExists = cart.some((item) => item.sku === sku);
+    const addedItemExists = database.cart.some((item) => item.sku === sku);
     const product = {
       sku,
       name,
@@ -20,31 +20,31 @@ module.exports = {
     };
 
     if (addedItemExists) {
-      cart = cart.map((item) => (
+      database.cart = database.cart.map((item) => (
 
         item.sku === sku
           ? { ...item, quantity: item.quantity + 1 }
           : item
       ));
     } else {
-      cart.push(product);
+      database.cart.push(product);
     }
 
-    response.json(cart);
+    response.json(database.cart);
   },
 
   async delete(request, response) {
     const { sku } = request.params;
     const { quantity } = request.body;
 
-    const addedItemExists = cart.some((item) => item.sku === sku);
+    const addedItemExists = database.cart.some((item) => item.sku === sku);
 
     if (quantity === 1) {
-      cart = cart.filter((product) => product.sku !== sku);
+      database.cart = database.cart.filter((product) => product.sku !== sku);
     }
 
     if (addedItemExists) {
-      cart = cart.map((item) => (
+      database.cart = database.cart.map((item) => (
 
         item.sku === sku
           ? { ...item, quantity: item.quantity - 1 }
@@ -52,7 +52,7 @@ module.exports = {
       ));
     }
 
-    response.send(cart);
+    response.send(database.cart);
   },
 
 };
